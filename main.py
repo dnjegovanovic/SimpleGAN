@@ -4,6 +4,7 @@ import numpy as np
 import tensorflow_datasets as tfds
 
 
+
 def simple_test_model():
     """
     Test generator and discriminator
@@ -30,7 +31,7 @@ def simple_test_model():
 
     disc_model = make_discriminator_net(num_hidden_layer=disc_hidden_layers,
                                         num_hidden_units=disc_hidden_size)
-
+                                        num_hidden_units=disc_hidden_size)
     disc_model.build(input_shape=(None, np.prod(img_size)))
     disc_model.summary()
 
