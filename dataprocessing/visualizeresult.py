@@ -52,7 +52,7 @@ def visuzlize_result(all_losses, all_d_vals, epoch_samples):
     ax.tick_params(axis='both', which='major', labelsize=15)
     ax2.tick_params(axis='both', which='major', labelsize=15)
 
-    # plt.savefig('images/ch17-gan-learning-curve.pdf')
+    plt.savefig('simple-gan-learning-curve.png')
     plt.show()
 
     selected_epochs = [1, 2, 4, 10, 50, 100]
@@ -73,5 +73,5 @@ def visuzlize_result(all_losses, all_d_vals, epoch_samples):
             image = epoch_samples[e - 1][j]
             ax.imshow(image, cmap='gray_r')
 
-    plt.savefig('simple_gan-samples.pdf')
+    plt.savefig('simple_gan-samples.png')
     plt.show()
