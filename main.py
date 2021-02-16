@@ -1,8 +1,9 @@
-from model.ganmodel import *
-from dataprocessing.dataprep import *
 import numpy as np
 import tensorflow_datasets as tfds
 
+from model.ganmodel import *
+from dataprocessing.dataprep import *
+import train
 
 
 def simple_test_model():
@@ -31,11 +32,12 @@ def simple_test_model():
 
     disc_model = make_discriminator_net(num_hidden_layer=disc_hidden_layers,
                                         num_hidden_units=disc_hidden_size)
-                                        num_hidden_units=disc_hidden_size)
+
     disc_model.build(input_shape=(None, np.prod(img_size)))
     disc_model.summary()
 
     return gen_model, disc_model
+
 
 def test_data():
     gen_model, disc_model = simple_test_model()
@@ -62,8 +64,7 @@ def test_data():
     print('d_logits_fake --shape:{}'.format(d_logits_fake.shape))
 
 
-
 if __name__ == '__main__':
-
-    #simple_test_model()
-    test_data()
+    # simple_test_model()
+    # test_data()
+    train.train_gan()
