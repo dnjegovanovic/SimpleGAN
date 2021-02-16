@@ -1,9 +1,10 @@
 import time
-import numpy as np
-import tensorflow as tf
 import tensorflow_datasets as tfds
+import pickle
 
 from dataprocessing import dataprep as dp
+from dataprocessing import visualizeresult as vis
+
 from model.ganmodel import *
 
 if tf.test.is_gpu_available():
@@ -96,13 +97,17 @@ def train_gan():
             # Compute discriminator loss
             with tf.GradientTape() as d_tape:
                 d_logits_real = disc_model(input_real, training=True)
+
                 d_labels_real = tf.ones_like(d_logits_real)
 
-                d_loss_real = loss_fn(y_true=d_labels_real, y_pred=d_logits_real)
+                d_loss_real = loss_fn(
+                    y_true=d_labels_real, y_pred=d_logits_real)
 
                 d_logits_fake = disc_model(g_output, training=True)
-                d_labels_fake = tf.ones_like(d_logits_fake)
-                d_loss_fake = loss_fn(y_true=d_labels_fake, y_pred=d_logits_fake)
+                d_labels_fake = tf.zeros_like(d_logits_fake)
+
+                d_loss_fake = loss_fn(
+                    y_true=d_labels_fake, y_pred=d_logits_fake)
 
                 d_loss = d_loss_real + d_loss_fake
 
@@ -129,3 +134,13 @@ def train_gan():
                 *list(np.mean(all_losses[-1], axis=0))))
 
         epoch_samples.append(create_samples(gen_model, fixed_z, btach_size=batch_size, image_size=img_size).numpy())
+
+    pickle.dump({'all_losses': all_losses,
+                 'all_d_vals': all_d_vals,
+                 'samples': epoch_samples},
+                open('simple_-learning.pkl', 'wb'))
+
+    gen_model.save('simple_gan_gen.h5')
+    disc_model.save('simple_gan_disc.h5')
+
+    vis.visuzlize_result(all_losses, all_d_vals, epoch_samples)
